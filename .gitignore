@@ -1,0 +1,82 @@
+# === Global ===
+.DS_Store
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.pid
+*.seed
+*.pid.lock
+*.swp
+*.launch
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# === temp & runtime
+.temp/
+.tmp/
+pids/
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# === Node Modules (global + nested)
+node_modules/
+**/node_modules/
+
+# === dist / build / coverage / output
+dist/
+build/
+coverage/
+.nyc_output/
+**/dist/
+**/build/
+**/coverage/
+**/.nyc_output/
+
+# === api/ özel
+api/.env
+api/.env.local
+api/.env.development.local
+api/.env.test.local
+api/.env.production.local
+api/logs/
+api/.DS_Store
+api/.idea/
+api/.project
+api/.classpath
+api/.c9/
+api/.settings/
+api/.sublime-workspace
+api/.vscode/*
+!api/.vscode/settings.json
+!api/.vscode/tasks.json
+!api/.vscode/launch.json
+!api/.vscode/extensions.json
+
+# === client/ özel (React + Vite)
+client/node_modules/
+client/dist/
+client/.env
+client/.env.local
+client/.env.development.local
+client/.env.production.local
+client/.DS_Store
+client/.idea/
+client/.vscode/*
+!client/.vscode/settings.json
+!client/.vscode/tasks.json
+!client/.vscode/launch.json
+!client/.vscode/extensions.json
+client/.vite/
+client/.vercel/
+
+# === IDE / OS Genel
+.vscode/
+.idea/
