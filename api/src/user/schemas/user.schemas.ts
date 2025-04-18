@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 @Schema({
   timestamps: true,
 })
-export class User {
+export class User extends Document {
   @Prop({ required: true })
   username: string;
 
