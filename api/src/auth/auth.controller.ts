@@ -3,7 +3,8 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { loginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -14,7 +15,7 @@ export class AuthController {
   }
   //local strategy kullanıp isim ve şifre doğrulanıyor
   //authservice de tokenleri oluştur geri döndür
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req, @Body() loginDto: loginDto) {
     return this.authService.login(req.user);

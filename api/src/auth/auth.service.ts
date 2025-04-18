@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { User } from 'src/user/schemas/user.schemas';
 @Injectable()
 export class AuthService {
   constructor(
@@ -39,8 +40,8 @@ export class AuthService {
       username: username,
     };
     return this.jwtService.sign(payload, {
-      secret: process.env.JWT_SECRET,
-      expiresIn: process.env.JWT_EXPIRATION_TIME,
+      secret: process.env.JWT_SECRET || 'accessTokenSecret',
+      expiresIn: process.env.JWT_EXPIRATION_TIME || '15m',
     });
   }
   generateRefreshToken(userId: string, username: string) {
@@ -49,8 +50,8 @@ export class AuthService {
       username: username,
     };
     return this.jwtService.sign(payload, {
-      secret: process.env.JWT_REFRESH_SECRET,
-      expiresIn: process.env.JWT_REFRESH_EXPIRATION_TIME,
+      secret: process.env.JWT_REFRESH_SECRET || 'refreshTokenSecret',
+      expiresIn: process.env.JWT_REFRESH_EXPIRATION_TIME || '7d',
     });
   }
   generateTokens(userId: string, username: string) {
@@ -59,9 +60,10 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  login(loginDto: any) {
-    //tokenleri oluştur gönder
-    return 'login';
+  login(user: User) {
+    const { username, _id } = user; //tokenleri oluştur gönder
+    const tokens = this.generateTokens(_id as string, username);
+    return tokens;
   }
 
   refresh(refreshTokenDto: any) {
