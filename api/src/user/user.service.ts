@@ -4,7 +4,7 @@ import { User } from './schemas/user.schemas';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UpdateUserDto } from './dto/update-user.dto';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserService {
   //user modelini inject et
@@ -45,5 +45,27 @@ export class UserService {
       throw new NotFoundException('Kullanıcı bulunamadı');
     }
     return deletedUser;
+  }
+  //refresh token güncelleyecek fonksiyon
+  async setRefreshToken(userId: string, refreshToken: string) {
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    await this.userModel.findByIdAndUpdate(userId, {
+      refreshToken: hashedRefreshToken,
+    });
+  }
+  //refresh token i kaldır
+  async removeRefreshToken(userId: string) {
+    await this.userModel.findByIdAndUpdate(userId, { refreshToken: null });
+  }
+  //kullanıcının refresh token i var mı kontrol et
+  async hasRefreshToken(
+    userId: string,
+    refreshToken: string,
+  ): Promise<boolean> {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('Kullanıcı bulunamadı');
+    }
+    return user.refreshToken === refreshToken;
   }
 }
