@@ -44,15 +44,20 @@ export class AuthService {
       expiresIn: process.env.JWT_EXPIRATION_TIME || '15m',
     });
   }
-  generateRefreshToken(userId: string, username: string) {
+  async generateRefreshToken(userId: string, username: string) {
     const payload = {
       sub: userId,
       username: username,
     };
-    return this.jwtService.sign(payload, {
+
+    const refreshToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_REFRESH_SECRET || 'refreshTokenSecret',
       expiresIn: process.env.JWT_REFRESH_EXPIRATION_TIME || '7d',
     });
+    //refresh tokeni db'ye kaydet
+    await this.userService.setRefreshToken(userId, refreshToken);
+
+    return refreshToken;
   }
   generateTokens(userId: string, username: string) {
     const accessToken = this.generateAccessToken(userId, username);
@@ -63,7 +68,15 @@ export class AuthService {
   login(user: User) {
     const { username, _id } = user; //tokenleri oluştur gönder
     const tokens = this.generateTokens(_id as string, username);
-    return tokens;
+    return {
+      user: {
+        id: _id,
+        username: username,
+        email: user.email,
+        profilePicture: user.profilePicture,
+      },
+      ...tokens,
+    };
   }
 
   refresh(refreshTokenDto: any) {
