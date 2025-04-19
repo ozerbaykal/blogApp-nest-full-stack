@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { loginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { JwtAuthGuard, LocalAuthGuard } from './guards/local-auth.guard';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -21,10 +21,10 @@ export class AuthController {
   login(@Request() req, @Body() loginDto: loginDto) {
     return this.authService.login(req.user);
   }
-
+  @UseGuards(JwtRefreshGuard)
   @Post('refresh')
-  refresh(@Body() refreshTokenDto: RefreshTokenDto) {
-    return this.authService.refresh(refreshTokenDto);
+  refresh(@Request() req, @Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refresh(req.user);
   }
   @UseGuards(JwtAuthGuard)
   @Post('logout')

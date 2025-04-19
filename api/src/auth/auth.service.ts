@@ -4,7 +4,6 @@ import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/schemas/user.schemas';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -80,8 +79,21 @@ export class AuthService {
     };
   }
 
-  refresh(refreshTokenDto: any) {
-    return 'refresh';
+  async refresh(user: any) {
+    // JwtRefreshStrategy'den gelen yapı { userId, username } şeklinde
+    const userId = user.userId || user._id;
+    const username = user.username;
+
+    // Yeni tokenlar oluştur
+    const tokens = await this.generateTokens(userId, username);
+
+    return {
+      ...tokens,
+      user: {
+        id: userId,
+        username: username,
+      },
+    };
   }
 
   async logout(userId: string, refreshTokenDto: string) {
