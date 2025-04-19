@@ -4,6 +4,7 @@ import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/schemas/user.schemas';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -59,15 +60,15 @@ export class AuthService {
 
     return refreshToken;
   }
-  generateTokens(userId: string, username: string) {
+  async generateTokens(userId: string, username: string) {
     const accessToken = this.generateAccessToken(userId, username);
-    const refreshToken = this.generateRefreshToken(userId, username);
+    const refreshToken = await this.generateRefreshToken(userId, username);
     return { accessToken, refreshToken };
   }
 
-  login(user: User) {
+  async login(user: User) {
     const { username, _id } = user; //tokenleri oluştur gönder
-    const tokens = this.generateTokens(_id as string, username);
+    const tokens = await this.generateTokens(_id as string, username);
     return {
       user: {
         id: _id,
@@ -83,7 +84,11 @@ export class AuthService {
     return 'refresh';
   }
 
-  logout(logoutDto: any) {
-    return 'logout';
+  async logout(userId: string, refreshTokenDto: string) {
+    await this.userService.removeRefreshToken(userId);
+
+    return {
+      message: 'Çıkış yapıldı',
+    };
   }
 }
