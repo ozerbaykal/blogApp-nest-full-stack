@@ -24,7 +24,12 @@ export class AuthController {
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
   refresh(@Request() req, @Body() refreshTokenDto: RefreshTokenDto) {
-    return this.authService.refresh(req.user);
+    return {
+      acces_token: this.authService.generateAccessToken(
+        req.user._id,
+        req.user.username,
+      ),
+    };
   }
   @UseGuards(JwtAuthGuard)
   @Post('logout')
