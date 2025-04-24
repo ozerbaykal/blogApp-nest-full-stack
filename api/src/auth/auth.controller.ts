@@ -5,6 +5,8 @@ import { loginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { JwtAuthGuard, LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
+import { Request as Req } from 'express';
+import { User } from 'src/user/schemas/user.schemas';
 
 @Controller('auth')
 export class AuthController {
@@ -18,22 +20,22 @@ export class AuthController {
   //authservice de tokenleri oluştur geri döndür
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(@Request() req, @Body() loginDto: loginDto) {
-    return this.authService.login(req.user);
+  login(@Request() req: Req, @Body() loginDto: loginDto) {
+    return this.authService.login(req.user as User);
   }
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
-  refresh(@Request() req, @Body() refreshTokenDto: RefreshTokenDto) {
+  refresh(@Request() req: Req, @Body() refreshTokenDto: RefreshTokenDto) {
     return {
       acces_token: this.authService.generateAccessToken(
-        req.user._id,
-        req.user.username,
+        req.user!._id,
+        req.user!.username,
       ),
     };
   }
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  logout(@Request() req, @Body() refreshTokenDto: RefreshTokenDto) {
-    return this.authService.logout(req.user._id, refreshTokenDto.refreshToken);
+  logout(@Request() req: Req, @Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.logout(req.user!._id, refreshTokenDto.refreshToken);
   }
 }
