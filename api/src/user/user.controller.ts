@@ -1,7 +1,15 @@
-import { Controller, Get, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { Request as req } from 'express';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -14,5 +22,11 @@ export class UserController {
     //zaten kullanıcının bilgilerini getirmek için gerekli olan guard req.user içinde kullanıcıyı döndürüyor
 
     return req.user;
+  }
+  //kullanıcıyı güncelle
+  @UseGuards(JwtAuthGuard)
+  @Patch('me')
+  updateProfile(@Request() req: req, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(req.user!._id, updateUserDto);
   }
 }

@@ -13,9 +13,7 @@ export class AuthService {
   async register(createUserDto: CreateUserDto) {
     try {
       const user = await this.userService.create(createUserDto);
-      const userObject = user.toObject();
-      const { password, ...userWithoutPassword } = userObject;
-      return userWithoutPassword;
+      return user;
     } catch (error) {
       if (error.code === 11000) {
         throw new BadRequestException(

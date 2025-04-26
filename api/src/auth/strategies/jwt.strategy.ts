@@ -18,8 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     if (!user) {
       throw new UnauthorizedException('Kullanıcı bulunamadı');
     }
-    const { password, ...userWithoutPassword } = user.toObject();
-    //kullanıcı bulunduysa kullanıcıyı döndür
-    return userWithoutPassword;
+
+    return user;
   }
 }

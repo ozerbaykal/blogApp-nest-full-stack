@@ -37,3 +37,13 @@ UserSchema.pre('save', async function (next) {
 
   next();
 });
+
+// Duyarlı verileri JSON'da göstermemek için transform
+UserSchema.set('toJSON', {
+  transform: (doc, ret) => {
+    delete ret.password;
+    delete ret.__v;
+    delete ret.refreshToken;
+    return ret;
+  },
+});
