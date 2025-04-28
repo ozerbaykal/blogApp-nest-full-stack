@@ -15,6 +15,9 @@ export class Post extends Document {
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   author: User;
 
+  @Prop({ required: true })
+  tags: string[];
+
   @Prop()
   photo: string;
 }

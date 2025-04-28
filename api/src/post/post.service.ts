@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Post } from './schemas/post.schema';
@@ -10,24 +14,57 @@ import { User } from 'src/user/schemas/user.schemas';
 export class PostService {
   constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
 
-  async create(user: User, createPostDto: CreatePostDto) {
-    const createdPost = await this.postModel.create({
+  async create(user: User, createPostDto: CreatePostDto): Promise<Post> {
+    const newPost = await this.postModel.create({
       ...createPostDto,
+      author: user._id,
     });
-    return createdPost;
+    return newPost.save();
   }
 
-  async findAll() {
-    return this.postModel.find();
+  //hem postları hem toplam sayfayı alıcak sorguları aynı anda çalıştırdık
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ posts: Post[]; total: number; totalPages: number }> {
+    const [posts, total] = await Promise.all([
+      this.postModel
+        .find()
+        .populate('author')
+        .skip((page - 1) * limit)
+        .limit(limit),
+
+      this.postModel.countDocuments(),
+    ]);
+    return { total, totalPages: Math.ceil(total / limit), posts };
   }
 
   async findOne(id: string) {
-    return this.postModel.findById(id);
+    const post = await this.postModel.findById(id);
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    return post;
   }
   async update(id: string, user: User, updatePostDto: UpdatePostDto) {
+    const post = await this.findOne(id);
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    if (post.author.toString() !== user._id!.toString()) {
+      throw new ForbiddenException('You are not allowed to update this post');
+    }
+
     return this.postModel.findByIdAndUpdate(id, updatePostDto, { new: true });
   }
   async delete(id: string, user: User) {
+    const post = await this.findOne(id);
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    if (post.author.toString() !== user._id!.toString()) {
+      throw new ForbiddenException('You are not allowed to delete this post');
+    }
     return this.postModel.findByIdAndDelete(id);
   }
 }

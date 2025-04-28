@@ -8,6 +8,8 @@ import {
   Post,
   UseGuards,
   Request,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { JwtAuthGuard } from 'src/auth/guards/local-auth.guard';
@@ -15,6 +17,7 @@ import { CreatePostDto } from './dto/create-post-dto';
 import { UpdatePostDto } from './dto/update-post-dto';
 import { Request as Req } from 'express';
 import { User } from 'src/user/schemas/user.schemas';
+
 @Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
@@ -27,8 +30,11 @@ export class PostController {
   }
   //postları getirme
   @Get()
-  findAll(@Request() req: Req) {
-    return this.postService.findAll();
+  findAll(
+    @Query('page', ParseIntPipe) page: number = 1,
+    @Query('limit', ParseIntPipe) limit: number = 10,
+  ) {
+    return this.postService.findAll(page, limit);
   }
 
   @Get(':id')
