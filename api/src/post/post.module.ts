@@ -9,5 +9,6 @@ import { MongooseModule } from '@nestjs/mongoose';
   ],
   providers: [PostService],
   controllers: [PostController],
+  exports: [PostService],
 })
 export class PostModule {}

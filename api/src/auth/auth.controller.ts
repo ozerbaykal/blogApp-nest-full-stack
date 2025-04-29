@@ -21,7 +21,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req: Req, @Body() loginDto: loginDto) {
-    return this.authService.login(req.user as User);
+    return this.authService.login(req.user as unknown as User);
   }
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')

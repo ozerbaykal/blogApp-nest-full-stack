@@ -65,7 +65,7 @@ export class AuthService {
 
   async login(user: User) {
     const { username, _id } = user; //tokenleri oluştur gönder
-    const tokens = await this.generateTokens(_id as string, username);
+    const tokens = await this.generateTokens(_id.toString(), username);
     return {
       user: {
         id: _id,

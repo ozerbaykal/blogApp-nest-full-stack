@@ -47,7 +47,8 @@ export class PostService {
     return post;
   }
   async update(id: string, user: User, updatePostDto: UpdatePostDto) {
-    const post = await this.findOne(id);
+    const post = await this.postModel.findById(id);
+
     if (!post) {
       throw new NotFoundException('Post not found');
     }
@@ -57,14 +58,20 @@ export class PostService {
 
     return this.postModel.findByIdAndUpdate(id, updatePostDto, { new: true });
   }
+  //postu silme
   async delete(id: string, user: User) {
-    const post = await this.findOne(id);
+    //postu bul
+    const post = await this.postModel.findById(id);
+
+    //post bulunamadıysa hata döndür
     if (!post) {
       throw new NotFoundException('Post not found');
     }
-    if (post.author.toString() !== user._id!.toString()) {
+    //postun sahibi kullanıcı değilse hata döndür
+    if (post.author.toString() !== user._id.toString()) {
       throw new ForbiddenException('You are not allowed to delete this post');
     }
+    //postu sil
     return this.postModel.findByIdAndDelete(id);
   }
 }

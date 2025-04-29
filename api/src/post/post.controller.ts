@@ -10,6 +10,8 @@ import {
   Request,
   Query,
   ParseIntPipe,
+  DefaultValuePipe,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { JwtAuthGuard } from 'src/auth/guards/local-auth.guard';
@@ -26,13 +28,13 @@ export class PostController {
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Request() req: Req, @Body() createPostDto: CreatePostDto) {
-    return this.postService.create(req.user as User, createPostDto);
+    return this.postService.create(req.user as unknown as User, createPostDto);
   }
   //postları getirme
   @Get()
   findAll(
-    @Query('page', ParseIntPipe) page: number = 1,
-    @Query('limit', ParseIntPipe) limit: number = 10,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
   ) {
     return this.postService.findAll(page, limit);
   }
@@ -49,12 +51,16 @@ export class PostController {
     @Request() req: Req,
     @Body() updatePostDto: UpdatePostDto,
   ) {
-    return this.postService.update(id, req.user as User, updatePostDto);
+    return this.postService.update(
+      id,
+      req.user as unknown as User,
+      updatePostDto,
+    );
   }
   //postu silme
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   delete(@Param('id') id: string, @Request() req: Req) {
-    return this.postService.delete(id, req.user as User);
+    return this.postService.delete(id, req.user as unknown as User);
   }
 }

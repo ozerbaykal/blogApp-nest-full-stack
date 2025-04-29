@@ -1,10 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 @Schema({
   timestamps: true,
 })
 export class User extends Document {
+  declare _id: Types.ObjectId;
+
   @Prop({ required: true })
   username: string;
 
