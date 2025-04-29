@@ -6,11 +6,13 @@ import {
   Param,
   Post,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment-dto';
 import { Request as Req } from 'express';
 import { User } from 'src/user/schemas/user.schemas';
+import { JwtAuthGuard } from 'src/auth/guards/local-auth.guard';
 
 @Controller()
 export class CommentController {
@@ -20,7 +22,7 @@ export class CommentController {
   findAllByPost(@Param('postId') postId: string) {
     return this.commentService.findAllByPost(postId);
   }
-
+  @UseGuards(JwtAuthGuard)
   @Post('/post/:postId/comments')
   create(
     @Param('postId') postId: string,
@@ -34,6 +36,7 @@ export class CommentController {
       req.user as unknown as User,
     );
   }
+  @UseGuards(JwtAuthGuard)
   @Delete('/comments/:id')
   delete(@Param('id') id: string, @Request() req: Req) {
     return this.commentService.delete(id, req.user as unknown as User);
