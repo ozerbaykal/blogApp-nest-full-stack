@@ -11,4 +11,12 @@ declare global {
       profilePicture: string;
     }
   }
+
+  // request nesnesni genişlet
+  interface Request {
+    cookies: {
+      access_token: string;
+      refresh_token: string;
+    };
+  }
 }

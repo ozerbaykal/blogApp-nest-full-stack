@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Request,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { loginDto } from './dto/login.dto';
@@ -20,19 +27,44 @@ export class AuthController {
   //authservice de tokenleri oluştur geri döndür
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  login(@Request() req: Req, @Body() loginDto: loginDto) {
-    return this.authService.login(req.user as unknown as User);
+  async login(
+    @Request() req: Req,
+    @Res({ passthrough: true }) res,
+    @Body() loginDto: loginDto,
+  ) {
+    const { user, accessToken, refreshToken } = await this.authService.login(
+      req.user as unknown as User,
+    );
+
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    res.cookie('access_token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 1 * 60 * 60 * 1000,
+    });
+    return { user };
   }
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
-  refresh(@Request() req: Req, @Body() refreshTokenDto: RefreshTokenDto) {
-    return {
-      acces_token: this.authService.generateAccessToken(
-        req.user!._id,
-        req.user!.username,
-      ),
-    };
+  refresh(@Request() req: Req, @Res({ passthrough: true }) res) {
+    const access = this.authService.generateAccessToken(
+      req.user!._id,
+      req.user!.username,
+    );
+
+    res.cookie('access_token', access, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 1 * 60 * 60 * 1000,
+    });
+
+    return { message: 'Yeni Erişim Tokeni Oluşturuldu' };
   }
+
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   logout(@Request() req: Req, @Body() refreshTokenDto: RefreshTokenDto) {
