@@ -7,6 +7,7 @@ import Footer from "./components/footer";
 import Create from "./pages/create";
 import Detail from "./pages/detail";
 import Edit from "./pages/edit";
+import Protected from "./components/protected";
 const App = () => {
   return (
     <div className="bg-dark-08 text-white min-h-screen flex flex-col ">
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/blog/:id" element={<Detail />} />
 
+          <Route element={<Protected />} />
           <Route path="/create" element={<Create />} />
           <Route path="/blog/:id/edit" element={<Edit />} />
         </Routes>

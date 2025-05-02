@@ -70,11 +70,9 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   async logout(@Request() req: Req, @Res({ passthrough: true }) res) {
-    console.log('User ID:', req.user!._id); // D
-    await this.authService.logout(req.user!._id);
     res.clearCookie('access_token');
     res.clearCookie('refresh_token');
 
-    return { message: 'Çıkış yapıldı' };
+    return await this.authService.logout(req.user!._id);
   }
 }
