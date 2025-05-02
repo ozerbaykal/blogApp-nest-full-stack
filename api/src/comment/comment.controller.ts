@@ -12,7 +12,7 @@ import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment-dto';
 import { Request as Req } from 'express';
 import { User } from 'src/user/schemas/user.schemas';
-import { JwtAuthGuard } from 'src/auth/guards/local-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller()
 export class CommentController {

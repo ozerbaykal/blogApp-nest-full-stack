@@ -10,10 +10,11 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { loginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { JwtAuthGuard, LocalAuthGuard } from './guards/local-auth.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { Request as Req } from 'express';
 import { User } from 'src/user/schemas/user.schemas';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -46,6 +47,7 @@ export class AuthController {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 1 * 60 * 60 * 1000,
     });
+
     return { user };
   }
   @UseGuards(JwtRefreshGuard)
@@ -67,7 +69,12 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  logout(@Request() req: Req, @Body() refreshTokenDto: RefreshTokenDto) {
-    return this.authService.logout(req.user!._id, refreshTokenDto.refreshToken);
+  async logout(@Request() req: Req, @Res({ passthrough: true }) res) {
+    console.log('User ID:', req.user!._id); // D
+    await this.authService.logout(req.user!._id);
+    res.clearCookie('access_token');
+    res.clearCookie('refresh_token');
+
+    return { message: 'Çıkış yapıldı' };
   }
 }

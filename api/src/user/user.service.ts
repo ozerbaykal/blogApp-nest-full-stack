@@ -15,7 +15,9 @@ export class UserService {
   //user oluştur
   async create(createUserDto: CreateUserDto): Promise<User> {
     const newUser = new this.userModel(createUserDto);
-    return await newUser.save();
+    const user = await newUser.save();
+
+    return user.toObject();
   }
   //bütün kullanıcıları getir
   async findAll(): Promise<User[]> {

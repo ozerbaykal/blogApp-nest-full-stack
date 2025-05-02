@@ -14,11 +14,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { PostService } from './post.service';
-import { JwtAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { CreatePostDto } from './dto/create-post-dto';
 import { UpdatePostDto } from './dto/update-post-dto';
 import { Request as Req } from 'express';
 import { User } from 'src/user/schemas/user.schemas';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('posts')
 export class PostController {

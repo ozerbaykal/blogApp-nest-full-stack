@@ -4,25 +4,15 @@ import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/user/schemas/user.schemas';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class AuthService {
   constructor(
+    private configService: ConfigService,
     private userService: UserService,
     private jwtService: JwtService,
   ) {}
-  async register(createUserDto: CreateUserDto) {
-    try {
-      const user = await this.userService.create(createUserDto);
-      return user;
-    } catch (error) {
-      if (error.code === 11000) {
-        throw new BadRequestException(
-          'BU kullanıcı adı veya email adresiyle zaten mevcut',
-        );
-      }
-      throw new BadRequestException('Kullanıcı oluşturma hatası');
-    }
-  }
+
   async validateUser(username: string, password: string) {
     const user = await this.userService.findByUsername(username);
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -62,6 +52,21 @@ export class AuthService {
     const refreshToken = await this.generateRefreshToken(userId, username);
     return { accessToken, refreshToken };
   }
+  async register(createUserDto: CreateUserDto) {
+    try {
+      const user = await this.userService.create(createUserDto);
+      console.log('Yeni kullanıcı oluşturuldu:', user);
+      return user;
+    } catch (error) {
+      console.log('Hata:', error);
+      if (error.code === 11000) {
+        throw new BadRequestException(
+          'Bu kullanıcı adı veya email adresiyle zaten mevcut',
+        );
+      }
+      throw new BadRequestException('Kullanıcı oluşturma hatası');
+    }
+  }
 
   async login(user: User) {
     const { username, _id } = user; //tokenleri oluştur gönder
@@ -94,9 +99,8 @@ export class AuthService {
     };
   }
 
-  async logout(userId: string, refreshTokenDto: string) {
+  async logout(userId: string) {
     await this.userService.removeRefreshToken(userId);
-
     return {
       message: 'Çıkış yapıldı',
     };
