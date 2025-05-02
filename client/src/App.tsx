@@ -21,9 +21,10 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/blog/:id" element={<Detail />} />
 
-          <Route element={<Protected />} />
-          <Route path="/create" element={<Create />} />
-          <Route path="/blog/:id/edit" element={<Edit />} />
+          <Route element={<Protected />}>
+            <Route path="/blog/create" element={<Create />} />
+            <Route path="/blog/:id/edit" element={<Edit />} />
+          </Route>
         </Routes>
       </main>
       <Footer />

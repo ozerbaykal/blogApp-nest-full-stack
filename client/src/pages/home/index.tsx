@@ -1,9 +1,10 @@
 import { FC } from "react";
+import Hero from "./hero";
 
 const Home: FC = () => {
   return (
     <div>
-      <h1 className="text-4xl">Ana Sayfa</h1>
+      <Hero />
     </div>
   );
 };

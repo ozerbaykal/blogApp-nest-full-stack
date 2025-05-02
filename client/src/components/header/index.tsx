@@ -39,11 +39,11 @@ const Header: FC = () => {
             <div className="group relative">
               <span>{user?.username}</span>
 
-              <div className="hidden group-hover:block absolute top-6 -right-2 bg-yellow-55  rounded-md ">
-                <button
-                  onClick={logout}
-                  className="hover:bg-zinc-700 transition cursor-pointer px-3 py-1 rounded-md "
-                >
+              <div className="hidden group-hover:block absolute top-5 -right-2 bg-yellow-55  rounded-md ">
+                <Link to="blog/create">
+                  <button className="dropdown-link">Blog Yaz</button>
+                </Link>
+                <button onClick={logout} className="dropdown-link">
                   ÇıkışYap
                 </button>
               </div>
