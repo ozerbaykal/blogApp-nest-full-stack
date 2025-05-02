@@ -36,10 +36,10 @@ const Header: FC = () => {
               Bize Katıl
             </Link>
           ) : (
-            <div className="group">
+            <div className="group relative">
               <span>{user?.username}</span>
 
-              <div className="hidden group-hover:block absolute top-20 right-2 bg-black  rounde-md  ">
+              <div className="hidden group-hover:block absolute top-6 -right-2 bg-yellow-55  rounded-md ">
                 <button
                   onClick={logout}
                   className="hover:bg-zinc-700 transition cursor-pointer px-3 py-1 rounded-md "
