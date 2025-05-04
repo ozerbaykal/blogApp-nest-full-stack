@@ -19,7 +19,10 @@ export class User extends Document {
   @Prop({ default: ' ' })
   refreshToken: string;
 
-  @Prop({ default: ' ' })
+  @Prop({
+    default:
+      'https://static.vecteezy.com/system/resources/previews/013/360/247/non_2x/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg',
+  })
   profilePicture: string;
 }
 

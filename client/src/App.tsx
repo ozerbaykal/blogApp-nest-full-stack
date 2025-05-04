@@ -4,10 +4,9 @@ import Register from "./pages/register";
 import Login from "./pages/login";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import Create from "./pages/create";
 import Detail from "./pages/detail";
-import Edit from "./pages/edit";
 import Protected from "./components/protected";
+import BlogForm from "./pages/form";
 const App = () => {
   return (
     <div className="bg-dark-08 text-white min-h-screen flex flex-col ">
@@ -22,8 +21,8 @@ const App = () => {
           <Route path="/blog/:id" element={<Detail />} />
 
           <Route element={<Protected />}>
-            <Route path="/blog/create" element={<Create />} />
-            <Route path="/blog/:id/edit" element={<Edit />} />
+            <Route path="/blog/create" element={<BlogForm />} />
+            <Route path="/blog/:id/edit" element={<BlogForm />} />
           </Route>
         </Routes>
       </main>
