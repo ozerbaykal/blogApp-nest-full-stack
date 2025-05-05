@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useBlogs } from "../../hooks/useBlogs";
 import { FaArrowRight, FaEdit, FaTrash } from "react-icons/fa";
+import Comments from "../../components/comments";
 
 const OwnBlogs = () => {
   const { ownBlogs, deleteBlog } = useBlogs();
@@ -47,6 +48,7 @@ const OwnBlogs = () => {
           </div>
         ))}
       </div>
+      <Comments />
     </div>
   );
 };

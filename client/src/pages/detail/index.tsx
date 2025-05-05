@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { useBlogs } from "../../hooks/useBlogs";
+import Comments from "../../components/comments";
 
 const Detail: FC = () => {
   const { id } = useParams();
@@ -40,6 +41,7 @@ const Detail: FC = () => {
           </div>
         </div>
       </div>
+      <Comments />
     </div>
   );
 };
