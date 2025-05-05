@@ -1,5 +1,5 @@
 import { Formik, Form } from "formik";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Input from "../../components/input";
 import ReactSelect from "react-select/creatable";
@@ -15,7 +15,7 @@ const BlogForm: FC = () => {
   const isEditMode = !!id;
 
   //blog hookları
-  const { createBlog, blog } = useBlogs();
+  const { createBlog, updateBlog, blog } = useBlogs();
 
   //düzenlenecek blogun verilerini al
   const { data, isLoading } = blog(id as string);
@@ -23,13 +23,22 @@ const BlogForm: FC = () => {
   //etiketleri state e at
   const [tags, setTags] = useState<string[]>(data?.tags || []);
 
-  console.log(data);
+  // etiketleri state'e at
+  useEffect(() => {
+    if (data?.tags) {
+      setTags(data.tags);
+    }
+  }, [data]);
 
+  //form submit işlemi
   const handleSubmit = (values: any) => {
     const data: CreateBlogValues = { ...values, tags };
-    console.log(data);
 
-    createBlog.mutate(data);
+    if (isEditMode) {
+      updateBlog.mutate({ id: id as string, values: data });
+    } else {
+      createBlog.mutate(data);
+    }
   };
 
   if (isLoading) return <div>Loading ...</div>;
