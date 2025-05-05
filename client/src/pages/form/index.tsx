@@ -1,20 +1,38 @@
 import { Formik, Form } from "formik";
 import { FC, useState } from "react";
 import { useParams } from "react-router-dom";
-import { blogSchema } from "../../utils/schema";
 import Input from "../../components/input";
 import ReactSelect from "react-select/creatable";
+import { CreateBlogValues } from "../../types";
+import { useBlogs } from "../../hooks/useBlogs";
+import { blogSchema } from "../../utils/schema";
 
 const BlogForm: FC = () => {
-  const [tags, setTags] = useState([]);
+  //id yi al
   const { id } = useParams();
+
+  //edit mode kontrolu
   const isEditMode = !!id;
 
+  //blog hookları
+  const { createBlog, blog } = useBlogs();
+
+  //düzenlenecek blogun verilerini al
+  const { data, isLoading } = blog(id as string);
+
+  //etiketleri state e at
+  const [tags, setTags] = useState<string[]>(data?.tags || []);
+
+  console.log(data);
+
   const handleSubmit = (values: any) => {
-    console.log("buton clik");
-    console.log(values);
+    const data: CreateBlogValues = { ...values, tags };
+    console.log(data);
+
+    createBlog.mutate(data);
   };
 
+  if (isLoading) return <div>Loading ...</div>;
   return (
     <div className="max-w-3xl mx-auto padding-x py-10">
       <h1 className="text-3xl font-bold text-zinc-400 mb-8">
@@ -22,15 +40,15 @@ const BlogForm: FC = () => {
       </h1>
 
       <Formik
-        initialValues={{ title: "", content: "" }}
-        //validationSchema={blogSchema}
+        initialValues={{ title: data?.title || "", content: data?.content || "" }}
+        validationSchema={blogSchema}
         onSubmit={handleSubmit}
-        // enableReinitialize
+        enableReinitialize
       >
         {({ isSubmitting }) => (
           <Form className="flex flex-col gap-10">
             <Input label="Başlık" name="title" type="text" />
-            <Input label="İçerik" name="içerik" type="textarea" />
+            <Input label="İçerik" name="content" type="textarea" />
 
             <div className="flex flex-col gap-2">
               <label className="block text-sm/6 font-medium text-white" htmlFor="tags">
