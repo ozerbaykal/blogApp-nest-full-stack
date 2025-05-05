@@ -17,11 +17,11 @@ const Detail: FC = () => {
         <h1 className="text-4xl md:text-5xl">{data?.title}</h1>
       </div>
 
-      <div className="grid grid-cols-[3fr_1fr] mt-5">
+      <div className="grid grid-cols-[3fr_1fr] mt-5 border-b border-dark-20">
         <div className="p-5">{data?.content}</div>
 
-        <div>
-          <p className="flex flex-col gap-2 border-b border-dark-20 px-3 md:px-5s pb-5">
+        <div className="border-l border-dark-20">
+          <p className="flex flex-col gap-2 border-b border-dark-20 px-3 md:px-5 pb-5">
             <span className="text-sm text-zinc-400">Tarih</span>
             <span>
               {new Date(data?.createdAt as string).toLocaleDateString("tr", {
@@ -32,7 +32,7 @@ const Detail: FC = () => {
             </span>
           </p>
 
-          <div className=" flex flex-col gap-5">
+          <div className=" flex flex-col gap-5 px-3 md:px-5 py-5">
             {data?.tags.map((tag) => (
               <div key={tag} className="bg-zinc-800 border-zinc-700 p-2 text-center rounded-md">
                 {tag}

@@ -48,6 +48,9 @@ export class CommentService {
     await this.postService.findOne(postId);
 
     //gönderiye ait yorumları getir
-    return this.commentModel.find({ post: postId }).sort({ createdAt: -1 });
+    return this.commentModel
+      .find({ post: postId })
+      .populate('author')
+      .sort({ createdAt: -1 });
   }
 }

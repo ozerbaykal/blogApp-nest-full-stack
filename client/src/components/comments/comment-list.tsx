@@ -21,7 +21,7 @@ const CommentList = ({ postId }: { postId: string }) => {
             <div key={comment._id} className="py-5 border-b border-dark-20">
               <div className="flex justify-between items-start">
                 <div className="flex items-start gap-2">
-                  <img src={comment.author.profilePicture} className="size-10 rounded-md" />
+                  <img src={comment.author.profilePicture} className="size-10 rounded-md bg " />
 
                   <div>
                     <p className="font-semibold">{comment.author.username}</p>
