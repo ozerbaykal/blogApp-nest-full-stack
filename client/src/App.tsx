@@ -7,6 +7,7 @@ import Footer from "./components/footer";
 import Detail from "./pages/detail";
 import Protected from "./components/protected";
 import BlogForm from "./pages/form";
+import OwnBlogs from "./pages/own-blogs";
 const App = () => {
   return (
     <div className="bg-dark-08 text-white min-h-screen flex flex-col ">
@@ -23,6 +24,7 @@ const App = () => {
           <Route element={<Protected />}>
             <Route path="/blog/create" element={<BlogForm />} />
             <Route path="/blog/:id/edit" element={<BlogForm />} />
+            <Route path="/own-blogs" element={<OwnBlogs />} />
           </Route>
         </Routes>
       </main>

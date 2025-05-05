@@ -26,10 +26,11 @@ export class PostService {
   async findAll(
     page: number = 1,
     limit: number = 10,
+    user?: User,
   ): Promise<{ posts: Post[]; total: number; totalPages: number }> {
     const [posts, total] = await Promise.all([
       this.postModel
-        .find()
+        .find(user ? { author: user._id } : {})
         .populate('author')
         .skip((page - 1) * limit)
         .limit(limit),
