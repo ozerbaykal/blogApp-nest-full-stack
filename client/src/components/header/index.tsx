@@ -14,9 +14,9 @@ const Header: FC = () => {
       </div>
 
       <div className="bg-dark-10  w-full padding-x py-5 flex justify-between items-center ">
-        <div>
+        <Link to="/" className="cursor-pointer">
           <img src="/logo.png" alt="logo" className="w-[100px] lg:w-[140px] 2xl:w-[180px]" />
-        </div>
+        </Link>
         <nav className="flex items-center gap-4 text-sm md:text-base text-grey-50">
           <NavLink to="/">Anasayfa</NavLink>
           <NavLink to="/own-blogs">Bloglarım</NavLink>
