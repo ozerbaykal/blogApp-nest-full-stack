@@ -32,8 +32,9 @@ api.interceptors.response.use(
       originalRequest.url !== "/auth/login" &&
       originalRequest.url !== "/auth/register"
     ) {
+      console.log(originalRequest.url);
       // isteği tekrar denemek için retry değişkenini true yap
-      originalRequest.retry = true;
+      (originalRequest as any).retry = true;
 
       try {
         // refresh token ile yeni bir access token
