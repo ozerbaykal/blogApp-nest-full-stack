@@ -32,6 +32,7 @@ export class PostService {
       this.postModel
         .find(user ? { author: user._id } : {})
         .populate('author')
+        .populate('commentCount')
         .skip((page - 1) * limit)
         .limit(limit),
 
